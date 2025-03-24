@@ -3,22 +3,24 @@ from openai import OpenAI
 from src.utils.utils import get_env_key, RED, TURQUOISE, RESET
 
 class LlmClient:
-    """Clase para manejar la interacción con Groq usando el patrón Singleton."""
-    _instance = None  # Implementación de Singleton
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(LlmClient, cls).__new__(cls)
-            cls._instance._init_instance(*args, **kwargs)  # Corregido: un solo guion bajo
-        return cls._instance
-
-    model = "gpt-3.5-turbo-0125"
+    """Clase para manejar la interacción con LLM usando patrón Singleton."""
+    _instance = None
+    # model = "gpt-3.5-turbo-0125"
     # model = "llama-3.3-70b-versatile"
     # model = "gemma2-9b-it"
     # model = "mixtral-8x7b-32768" # No responde bien... 
     # model = "llama-3.1-8b-instant"
-    # model = "llama3-8b-8192"
-    def _init_instance(self, llm_model=model):  # Corregido a un solo guion bajo
+    model = "llama3-8b-8192"
+
+    @classmethod
+    def get_instance(cls, model_name=None):
+        """Devuelve la instancia única del cliente, inicializándola si es necesario."""
+        if not cls._instance:
+            cls._instance = cls.__new__(cls)
+            cls._instance._init_instance(model_name or cls.model)
+        return cls._instance
+
+    def _init_instance(self, llm_model):
         self.llm_model = llm_model
         print(f"🤖 {TURQUOISE}Iniciando con el LLM: {llm_model}{RESET}\n")
 
@@ -27,11 +29,11 @@ class LlmClient:
             if not openai_api_key:
                 raise ValueError("La clave OPENAI_API_KEY no está definida en las variables de entorno.")
             self.client = OpenAI(api_key=openai_api_key)
-        else:           
+        else:
             groq_api_key = get_env_key('GROQ_API_KEY')
             if not groq_api_key:
                 raise ValueError("La clave GROQ_API_KEY no está definida en las variables de entorno.")
-            self.client = Groq()
+            self.client = Groq(api_key=groq_api_key)
 
     def get_response(self, messages_with_context):
         try:
@@ -48,7 +50,7 @@ class LlmClient:
             for chunk in response_stream:
                 try:
                     content = chunk.choices[0].delta.content
-                    if content:  
+                    if content:
                         response_text += content
                 except (AttributeError, IndexError, KeyError) as e:
                     print(f"Error al procesar chunk: {e}")
@@ -63,7 +65,14 @@ class LlmClient:
             except AttributeError:
                 error_code = 'unknown_error'
             print(f"😿 {RED}Error:{RESET} {e.message}")
-            return f"😿 ¡Ah, las cartas! Misteriosas y caprichosas... algo interfiere en mi sagrada conexión con ellas...\n❌ Error: {error_code} ❌\nLas energías se agitan, y cuando esto sucede, la verdad se oculta tras un manto de sombras. Sin embargo, no temas, pues lo que el tarot guarda, tarde o temprano será revelado. Necesito un momento para purificar la conexión... y entonces, corazón, el mensaje se revelará con la fuerza de lo inevitable."
+            return (
+                "😿 ¡Ah, las cartas! Misteriosas y caprichosas... algo interfiere en mi sagrada conexión con ellas...\n"
+                f"❌ Error: {error_code} ❌\n"
+                "Las energías se agitan, y cuando esto sucede, la verdad se oculta tras un manto de sombras. "
+                "Sin embargo, no temas, pues lo que el tarot guarda, tarde o temprano será revelado. "
+                "Necesito un momento para purificar la conexión... y entonces, corazón, el mensaje se revelará "
+                "con la fuerza de lo inevitable."
+            )
 
         except Exception as e:
             print(f"Error inesperado: {e}")

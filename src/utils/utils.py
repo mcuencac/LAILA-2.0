@@ -42,6 +42,10 @@ WORLD = "\U0001F30D"         # 🌍
 CELEBRATION = "\U0001F389"   # 🎉
 THINKING = "\U0001F914"      # 🤔
 RAISED_HAND = "\U0000270B"   # ✋
+SCISSORS = "\U00002702"      # ✂️
+PENCIL = "\U0000270F"        # ✏️
+GEAR = "\U00002699"          # ⚙️
+ROCKET = "\U0001F680"        # 🚀
 
 def get_env_key(env_key, levels_up=2, env_file_name=".env"):
     """

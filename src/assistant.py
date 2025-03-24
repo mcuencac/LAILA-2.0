@@ -2,7 +2,7 @@ import requests
 import pycountry
 import streamlit as st
 from src.llm_client import LlmClient
-from src.utils.utils import get_env_key, WORLD, RED, RESET, THINKING, BRIGHT_GREEN, TURQUOISE, PASTEL_YELLOW, SPARKLES, RESET, RED, RAISED_HAND
+from src.utils.utils import get_env_key, WORLD, RESET, THINKING, PASTEL_YELLOW
 from src.tarot_reader import TarotReader
 
 class Assistant:
@@ -17,23 +17,9 @@ class Assistant:
             raise ValueError("Error: No se encontró el archivo de prompt.")
         
         self.personality = base_prompt
-        self.client = LlmClient()
+        self.client = LlmClient.get_instance()
         self.welcome_message = None
-        
-        # Registro de herramientas
-        if "tools" not in st.session_state:
-            st.session_state.tools = {
-                "detect_country": self.detect_country_tool,
-                "generate_welcome_message": self.generate_welcome_message_tool,
-                "is_comprensible_message": self.is_comprensible_message_tool,
-                "is_disrespectful": self.is_disrespectful_tool,
-                "is_valid_question" : self.is_valid_question_tool,
-                "is_anything_else": self.is_anything_else_tool,
-                "laila_tarot_reading": self.laila_tarot_reading_tool,
-            }
-
-        self.tools = st.session_state.tools
-
+        self.register_tools()
 
     def detect_country_tool(self):
         """Detecta el país y el idioma del usuario utilizando su IP."""
@@ -68,7 +54,10 @@ class Assistant:
     def generate_welcome_message_tool(self):
         """Genera un mensaje de bienvenida traducido al idioma del usuario."""
         country, country_code, language = self.detect_country_tool()
-        print(f"{PASTEL_YELLOW}{WORLD} Pais: {country}, Idioma: {country_code}{RESET}")
+        if not st.session_state.get("country_info_printed", False):
+            print(f"{PASTEL_YELLOW}{WORLD} Pais: {country}, Idioma: {country_code}{RESET}")
+            st.session_state.country_info_printed = True
+
 
         prompt = get_env_key('PROMPT_INTRO')
         messages_with_context = [
@@ -174,3 +163,21 @@ Responde únicamente: 'Sí' o 'No'""")
         if tool_name in st.session_state.tools:
             return st.session_state.tools[tool_name](*args)
         return f"Herramienta '{tool_name}' no encontrada."
+
+    def register_tools(self):
+        """Registra las herramientas en el session_state si no están presentes."""
+        if "tools" not in st.session_state:
+            st.session_state.tools = {}
+
+        tools_to_register = {
+            "detect_country": self.detect_country_tool,
+            "generate_welcome_message": self.generate_welcome_message_tool,
+            "is_comprensible_message": self.is_comprensible_message_tool,
+            "is_disrespectful": self.is_disrespectful_tool,
+            "is_valid_question": self.is_valid_question_tool,
+            "is_anything_else": self.is_anything_else_tool,
+            "laila_tarot_reading": self.laila_tarot_reading_tool,
+        }
+
+        st.session_state.tools.update(tools_to_register)
+        self.tools = st.session_state.tools

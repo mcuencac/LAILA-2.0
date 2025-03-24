@@ -5,8 +5,8 @@ from src.utils.utils import get_env_key, BLUE, PURPLE, RESET, RED, PASTEL_YELLOW
 
 class TarotReader:
     def __init__(self):
-        self.rag = RAG()  # Carga el índice una vez al crear la instancia
-        self.llm_client = LlmClient(ll_model = "gpt-3.5-turbo-0125")
+        self.rag = RAG.get_instance() # Carga el índice una vez al crear la instancia
+        self.llm_client = LlmClient.get_instance("gpt-3.5-turbo-0125")
         # Lista de cartas del Tarot almacenada correctamente como un atributo de la instancia
         self.tarot_cards = [
             "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador", 

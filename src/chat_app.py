@@ -4,7 +4,6 @@ from src.assistant import Assistant
 from src.chat_history import ChatHistory
 from src.flow_manager import FlowManager
 from src.rag import RAG
-from src.chat_history import ChatHistory
 from src.utils.utils import get_env_key, BLUE, BRIGHT_WHITE, PASTEL_YELLOW, RESET
 
 class ChatApp:
@@ -38,7 +37,7 @@ class ChatApp:
             "FINISH": self.handle_final_response
         }
 
-        self.rag = RAG()
+        self.rag = RAG.get_instance()
 
     def initialize_session_state(self):
         """Inicializar todas las claves del estado de sesión en un solo lugar, incluyendo las tools."""
@@ -55,16 +54,6 @@ class ChatApp:
             "country_info": None,  
             "country_info_printed": False  
         }
-
-        # Inicializar tools solo si no están ya registradas
-        if "tools" not in st.session_state:
-            st.session_state.tools = {
-                "detect_country": self.assistant.detect_country_tool,
-                "generate_welcome_message": self.assistant.generate_welcome_message_tool,
-                "is_comprensible_message": self.assistant.is_comprensible_message_tool,
-                "is_disrespectful": self.assistant.is_disrespectful_tool,
-                "laila_tarot_reading": self.assistant.laila_tarot_reading_tool
-            }
 
         # Inicializar las claves predeterminadas
         for key, value in defaults.items():
@@ -99,7 +88,7 @@ class ChatApp:
         st.session_state.asking = self.history.get_messages()[-1]["content"]
         self.asking = st.session_state.asking
         print(f"\n{PASTEL_YELLOW}🦉 El usuario dijo (self.asking):{RESET} {self.asking}")
-        valid_question = self.assistant.use_tool("is_valid_question", {self.asking})
+        valid_question = self.assistant.use_tool("is_valid_question", self.asking)
         if valid_question:
             self.advance_flowstate("QUESTION_2")
             self.history.add_message("user", content=get_env_key('PROMPT_QUESTION_2'), hidden=True)
@@ -114,7 +103,7 @@ class ChatApp:
         st.session_state.info = self.history.get_messages()[-1]["content"]
         self.info = st.session_state.info
         print(f"\n{PASTEL_YELLOW}🦉 El usuario dijo (self.info):{RESET} {self.info}")
-        is_anything_else = self.assistant.use_tool("is_anything_else",{self.info},{self.asking})
+        is_anything_else = self.assistant.use_tool("is_anything_else", self.info, self.asking)
         if is_anything_else:
             self.advance_flowstate("PREPARE")
             response = self.rag.ask_question("¿En que consiste la piramide invertida de 6 cartas?")

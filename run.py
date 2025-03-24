@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import os
+os.environ["STREAMLIT_WATCHER_TYPE"] = "none"  # Evita conflictos con torch/classes
 import time
 import webbrowser
 from pathlib import Path
