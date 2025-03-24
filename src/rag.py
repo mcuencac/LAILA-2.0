@@ -76,7 +76,7 @@ class RAG:
         embeddings = HuggingFaceEmbeddings(
             model_name=model_path,
             # model_kwargs={'device': 'cuda' if torch.cuda.is_available() else 'cpu'},
-            model_kwargs={},  # Use CPU
+            model_kwargs={'device': 'cpu'},  # Use CPU
             encode_kwargs={'normalize_embeddings': False},
         )
 
@@ -101,7 +101,7 @@ class RAG:
         st.session_state.retriever = self.retriever
         st.session_state.qdrant_index_loaded = True
         print(f"🎉 {PURPLE}Carga finalizada con {len(self.docs)} fragmentos.{RESET}")
-        print(f"🗂️{PURPLE} Qdrant creado con {len(self.docs)} documentos.{RESET}")
+        print(f"📱 {PURPLE} Qdrant creado con {len(self.docs)} documentos.{RESET}")
 
     def chat(self):
         print("Bienvenido al chat RAG. Escribe 'salir' para terminar la conversación.")
