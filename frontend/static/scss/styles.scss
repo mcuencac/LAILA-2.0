@@ -258,10 +258,13 @@ header {
     
 }
 
-[data-testid="stChatInput"] {
+[data-testid="stChatInput"] > div {
     background: #28036e50;
     margin: 0 2vw;
     width: calc(100% - 4vw);
+    &:focus-within {
+        border-color: #471c67 !important;
+    }
     textarea{
         color: var(--white-color);
     }
