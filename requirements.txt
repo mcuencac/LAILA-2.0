@@ -10,3 +10,4 @@ libsass
 langchain_community
 langchain_huggingface
 pycountry
+qdrant-client
