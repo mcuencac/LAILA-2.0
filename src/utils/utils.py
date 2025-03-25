@@ -48,7 +48,7 @@ GEAR = "\U00002699"          # ⚙️
 ROCKET = "\U0001F680"        # 🚀
 DATABASE = "\U0001F4F1"      # 📱
 
-def get_env_key(env_key, levels_up=2, env_file_name=".env"):
+def get_env_key(env_key, levels_up=1, env_file_name=".env"):
     """
     Obtiene una clave específica de un archivo .env ubicado en un nivel superior.
 
