@@ -7,7 +7,7 @@ LAILA Pythoness actúa como una tarotista profesional 🃏, siempre disponible p
 
 ### ✨ ¿Cómo funciona LAILA Pythoness?
 
-Desarrollada con Python, integra un modelo RAG (Recuperación Aumentada por Generación) y tecnologías modernas como Streamlit para la interfaz y FAISS para la búsqueda semántica .
+Desarrollada con Python, integra un modelo RAG (Recuperación Aumentada por Generación) y tecnologías modernas como Streamlit para la interfaz y QDrant para la búsqueda semántica .
 LAILA está diseñada para realizar tiradas de cartas con un enfoque místico y teatral 🎭. Su propósito es ofrecer una experiencia interactiva y envolvente, capaz de realizar lecturas y responder de manera natural.
 
 Para interactuar con LAILA, simplemente accede a la aplicación web, LAILA te saludará con su personalidad magnética y única. Podrás formular tu pregunta y ella, tras algunas interacciones más, responderá con una tirada e interpretación basada en las cartas extraídas. Esta dinámica permite una experiencia inmersiva y personalizada, donde el usuario siente que está consultando a una tarotista profesional, misteriosa y esotérica.
@@ -52,9 +52,6 @@ LAILA-Pythoness/
 ├── context/ # Documentos de referencia usados en el RAG
 │ └── (archivos .pdf y .txt)
 │
-├── data/ # Datos utilizados por la aplicación
-│ └── faiss_index.pkl # Archivo del índice FAISS almacenado
-│
 ├── frontend/ # Interfaz gráfica con Streamlit
 │ ├── app.py # Punto de entrada de la interfaz
 │ ├── scss_watcher.py # Monitorización de estilos SCSS
@@ -72,8 +69,7 @@ LAILA-Pythoness/
 │ ├── flow_manager.py # Gestión del flujo conversacional
 │ ├── tarot_reader.py # Interpretación de las cartas de tarot
 │ ├── llm_client.py # Cliente para modelos de lenguaje
-│ ├── rag.py # Implementación del modelo RAG
-│ ├── faiss_index.py # Motor de búsqueda semántica con FAISS
+│ ├── rag.py # Implementación del modelo RAG (QDrant)
 │ ├── local_document_client.py # Gestión de documentos locales
 │ │
 │ └── utils/ # Utilidades generales y herramientas de procesamiento
@@ -142,4 +138,4 @@ Acceder a la aplicación web en [http://localhost:8501](http://localhost:8501/)
 
 LAILA Pythoness demuestra cómo una arquitectura modular puede combinar IA conversacional 🤖 y técnicas de búsqueda semántica 🔍 para ofrecer una experiencia interactiva enriquecida ✨. Su estructura bien definida y la separación de responsabilidades entre frontend y backend facilitan el mantenimiento 🛠️ y la escalabilidad 📈 de la aplicación.
 
-El uso de tecnologías como FAISS y un modelo RAG permite que LAILA acceda a fuentes de conocimiento locales y realice interpretaciones de tarot 🃏🔮 basadas en datos relevantes y contextuales. Esto la convierte en una herramienta poderosa no solo para consultas esotéricas, sino también como un ejemplo de aplicación avanzada de inteligencia artificial 🧠🤖 en el contexto de asistentes virtuales.
+El uso de tecnologías como QDrant y un modelo RAG permite que LAILA acceda a fuentes de conocimiento locales y realice interpretaciones de tarot 🃏🔮 basadas en datos relevantes y contextuales. Esto la convierte en una herramienta poderosa no solo para consultas esotéricas, sino también como un ejemplo de aplicación avanzada de inteligencia artificial 🧠🤖 en el contexto de asistentes virtuales.
