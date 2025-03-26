@@ -19,7 +19,7 @@ class ChatApp:
         self.info = st.session_state.info
 
         # Configurar el flujo del paso
-        self.flow_manager = FlowManager(st.session_state.step, max_steps=8)
+        self.flow_manager = FlowManager(st.session_state.step, max_steps=6)
         self.step = self.flow_manager.current_step + 1
 
         # Cargar imágenes
@@ -130,6 +130,7 @@ class ChatApp:
         """Manejador del estado TAROT."""
         self.advance_local_step()
         print(f"\n{PASTEL_YELLOW}🔮 Interacción:{RESET} {self.step} {PASTEL_YELLOW}Paso activo:{RESET} {st.session_state.flow_state}")
+        self.advance_flowstate("FINISH") 
         last_message = self.history.get_messages()[-1]["content"]
         print(f"\n{PASTEL_YELLOW}🦉 El usuario dijo:{RESET} {last_message}")
         self.laila_response("dramatica y solemne") 
@@ -138,6 +139,7 @@ class ChatApp:
         """Manejador del estado CLARIFICATIONS."""
         self.advance_local_step()
         print(f"\n{PASTEL_YELLOW}🔮 Interacción:{RESET} {self.step} {PASTEL_YELLOW}Paso activo:{RESET} {st.session_state.flow_state}")
+        self.advance_flowstate("FINISH")
         last_message = self.history.get_messages()[-1]["content"]
         print(f"\n{PASTEL_YELLOW}🦉 El usuario dijo:{RESET} {last_message}")
         self.history.add_message("user", content=get_env_key('PROMPT_CLARIFICATIONS'), hidden=True)
